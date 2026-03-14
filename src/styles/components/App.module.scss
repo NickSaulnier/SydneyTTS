@@ -1,0 +1,16 @@
+@use '../variables' as *;
+@use '../mixins' as *;
+
+.root {
+  min-height: 100%;
+  @include flex-center;
+  padding: $spacing-unit * 2;
+}
+
+.container {
+  text-align: center;
+}
+
+.title {
+  font-weight: 600 !important;
+}
