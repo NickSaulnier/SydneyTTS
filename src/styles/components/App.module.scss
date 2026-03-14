@@ -7,10 +7,23 @@
   padding: $spacing-unit * 2;
 }
 
-.container {
-  text-align: center;
+.card {
+  min-width: 600px;
+  min-height: 600px;
+  background-color: #000 !important;
+  border-radius: 16px;
+  @include flex-center;
+  flex-direction: column;
+  padding: $spacing-unit * 4;
 }
 
 .title {
   font-weight: 600 !important;
+  color: #fff;
+  text-align: center;
+}
+
+.subtitle {
+  color: #fff;
+  text-align: center;
 }
