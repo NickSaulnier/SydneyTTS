@@ -11,6 +11,6 @@ export const theme = createTheme({
     },
   },
   typography: {
-    fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+    fontFamily: '"Brush Script MT", cursive',
   },
 });

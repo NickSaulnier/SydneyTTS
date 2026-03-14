@@ -6,7 +6,6 @@
   justify-content: center;
 }
 
-
 @mixin respond-to($breakpoint) {
   @if $breakpoint == 'sm' {
     @media (min-width: $breakpoint-sm) {

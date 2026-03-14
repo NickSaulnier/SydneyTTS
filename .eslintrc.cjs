@@ -32,5 +32,14 @@ module.exports = {
     'react/react-in-jsx-scope': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+    'react/no-unknown-property': ['error', { ignore: ['attach', 'args', 'intensity', 'position', 'castShadow', 'receiveShadow', 'vertexColors'] }],
   },
+  overrides: [
+    {
+      files: ['src/components/App.tsx'],
+      rules: {
+        '@typescript-eslint/ban-ts-comment': ['error', { 'ts-nocheck': 'allow-with-description' }],
+      },
+    },
+  ],
 };

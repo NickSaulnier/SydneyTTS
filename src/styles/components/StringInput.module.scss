@@ -1,0 +1,26 @@
+@use '../variables' as *;
+
+.inputRow {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.inputLabel {
+  display: inline-block;
+  color: #fff !important;
+  font-size: 0.9375rem;
+  white-space: nowrap;
+  width: 150px;
+}
+
+.textInput {
+  flex: 1;
+  min-width: 0;
+  padding: $spacing-unit * 1.5 $spacing-unit * 2;
+  background-color: #fff;
+  border: none;
+  border-radius: 16px;
+  font-size: 0.875rem;
+  color: #000;
+}

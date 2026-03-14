@@ -1,0 +1,39 @@
+@use '../variables' as *;
+
+.fileName {
+  width: 100%;
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.InputLabel {
+  display: inline-block;
+  color: #fff !important;
+  font-size: 0.9375rem;
+  white-space: nowrap;
+  cursor: pointer;
+  width: 150px;
+}
+
+.FileInput {
+  flex: 1;
+  min-width: 0;
+  padding: $spacing-unit * 1.5 $spacing-unit * 2;
+  background-color: #fff;
+  border: none;
+  border-radius: 16px;
+  font-size: 0.875rem;
+  color: #000;
+  cursor: pointer;
+
+  &::file-selector-button {
+    margin-right: $spacing-unit * 2;
+    padding: $spacing-unit * 0.5 $spacing-unit;
+    border: none;
+    border-radius: 8px;
+    background-color: #fff;
+    color: #000;
+    font-size: 0.8125rem;
+    cursor: pointer;
+  }
+}

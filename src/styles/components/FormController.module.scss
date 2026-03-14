@@ -1,0 +1,7 @@
+@use '../variables' as *;
+
+.FormControllerContainer {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-unit * 2;
+}
