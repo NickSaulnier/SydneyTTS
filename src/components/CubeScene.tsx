@@ -1,15 +1,18 @@
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 
-const GRID_X = 10;
-const GRID_Y = 10;
+const GRID_X = 6;
+const GRID_Y = 6;
 const GRID_Z = 4;
-const GRID_SPACING = 1.0;
-const CUBE_SIZE = 0.68;
+const GRID_SPACING = 2.0;
+const CUBE_SIZE = 0.5;
 
-function randomGray(): number {
-  const g = 0.75 + Math.random() * 0.25;
-  return new THREE.Color(g, g, g).getHex();
+// MUI error/button red: #d32f2f (rgb 211, 47, 47)
+function randomRed(): number {
+  const r = 0.8 + Math.random() * 0.2; // 0.8–1.0
+  const g = 0.15 + Math.random() * 0.1; // 0.15–0.25
+  const b = 0.15 + Math.random() * 0.1; // 0.15–0.25
+  return new THREE.Color(r, g, b).getHex();
 }
 
 export function CubeScene() {
@@ -33,19 +36,25 @@ export function CubeScene() {
       if (width === 0 || height === 0) return;
 
       scene = new THREE.Scene();
-      scene.background = new THREE.Color(0x2a7a8f);
+      scene.background = null;
 
       camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 1000);
-      camera.position.z = 25;
+      camera.position.set(0, 0, 12);
       camera.lookAt(0, 0, 0);
 
       const canvas = document.createElement('canvas');
       canvas.style.display = 'block';
+      canvas.style.position = 'absolute';
+      canvas.style.top = '0';
+      canvas.style.left = '0';
+      canvas.style.width = '100%';
+      canvas.style.height = '100%';
       canvas.width = width;
       canvas.height = height;
       cont.appendChild(canvas);
 
-      renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+      renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+      renderer.setClearColor(0x000000, 0);
       renderer.setSize(width, height);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
@@ -60,7 +69,7 @@ export function CubeScene() {
         for (let iy = 0; iy < GRID_Y; iy++) {
           for (let iz = 0; iz < GRID_Z; iz++) {
             const material = new THREE.MeshBasicMaterial({
-              color: randomGray(),
+              color: randomRed(),
             });
             const mesh = new THREE.Mesh(geometry, material);
             mesh.position.x = ix * GRID_SPACING - offsetX;
@@ -146,8 +155,11 @@ export function CubeScene() {
         position: 'absolute',
         top: 0,
         left: 0,
+        right: 0,
+        bottom: 0,
         width: '100%',
         height: '100%',
+        minHeight: '100vh',
       }}
     />
   );
