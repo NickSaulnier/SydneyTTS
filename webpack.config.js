@@ -78,6 +78,9 @@ const rendererConfig = {
     }),
   ],
   devtool: 'source-map',
+  externals: {
+    electron: 'commonjs electron',
+  },
 };
 
 module.exports = [mainConfig, rendererConfig];

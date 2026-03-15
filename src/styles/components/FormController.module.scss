@@ -5,3 +5,20 @@
     flex-direction: column;
     gap: $spacing-unit * 2;
 }
+
+.loadingWidget {
+    display: flex;
+    align-items: center;
+    gap: $spacing-unit * 2;
+}
+
+.loadingText {
+    font-size: 0.875rem !important;
+    color: #fff !important;
+}
+
+.status {
+    margin: 0;
+    font-size: 0.875rem;
+    color: #fff;
+}

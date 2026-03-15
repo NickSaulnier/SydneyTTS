@@ -1,19 +1,38 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
+import * as fs from 'fs';
 import * as path from 'path';
-const { execFile } = require('child_process');
+import { spawn, ChildProcess } from 'child_process';
 
-let flaskProcess: { kill: () => void; };
+let flaskProcess: ChildProcess | null = null;
 
-function getBackendPath() {
-  // Use a different path for development vs production
-  return app.isPackaged 
-    ? path.join(process.resourcesPath, 'backend', 'app.exe')
-    : path.join(__dirname, 'dist', 'app.exe');
+function getServerDir(): string {
+  if (app.isPackaged) {
+    return path.join(process.resourcesPath, 'server');
+  }
+  return path.join(app.getAppPath(), 'server');
 }
 
-function startFlask() {
-  const backendPath = getBackendPath();
-  flaskProcess = execFile(backendPath);
+function startFlask(): void {
+  const serverDir = getServerDir();
+  const isWin = process.platform === 'win32';
+  const python = isWin ? 'python' : 'python3';
+  const scriptPath = path.join(serverDir, 'app.py');
+
+  flaskProcess = spawn(python, [scriptPath], {
+    cwd: serverDir,
+    stdio: 'inherit',
+  });
+
+  flaskProcess.on('error', (err) => {
+    console.error('Failed to start Flask:', err);
+  });
+
+  flaskProcess.on('exit', (code, signal) => {
+    flaskProcess = null;
+    if (code !== null && code !== 0) {
+      console.error('Flask exited with code', code);
+    }
+  });
 }
 
 function createWindow(): void {
@@ -26,35 +45,45 @@ function createWindow(): void {
     },
   });
 
-  const isDev = process.env.NODE_ENV !== 'production';
-  if (isDev) {
-    mainWindow.loadFile(path.join(__dirname, 'index.html'));
-  } else {
-    mainWindow.loadFile(path.join(__dirname, 'index.html'));
-  }
+  mainWindow.loadFile(path.join(__dirname, 'index.html'));
 
-  if (isDev) {
+  if (process.env.NODE_ENV !== 'production') {
     mainWindow.webContents.openDevTools();
   }
 }
 
+ipcMain.handle(
+  'save-audio-to-downloads',
+  (_event, { data, filename }: { data: string; filename: string }) => {
+    const downloadsDir = app.getPath('downloads');
+    let safeName = path.basename(filename) || 'audio.wav';
+    if (!safeName.toLowerCase().endsWith('.wav')) {
+      safeName = `${safeName}.wav`;
+    }
+    const filePath = path.join(downloadsDir, safeName);
+    const buffer = Buffer.from(data, 'base64');
+    fs.writeFileSync(filePath, buffer);
+    return { success: true, path: filePath };
+  }
+);
+
 app.whenReady().then(() => {
-  createWindow();
   startFlask();
+  createWindow();
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow();
-      startFlask();
     }
   });
 });
 
 app.on('window-all-closed', () => {
+  if (flaskProcess) {
+    flaskProcess.kill();
+    flaskProcess = null;
+  }
   if (process.platform !== 'darwin') {
     app.quit();
-    if (flaskProcess) {
-      flaskProcess.kill();
-    }
   }
 });
